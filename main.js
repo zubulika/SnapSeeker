@@ -1,7 +1,12 @@
-const { app, BrowserWindow, ipcMain, dialog, shell } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, shell, protocol, net } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const { createWorker } = require('tesseract.js');
+
+// Register media protocol scheme as privileged before app is ready
+protocol.registerSchemesAsPrivileged([
+  { scheme: 'media', privileges: { bypassCSP: true, secure: true, supportFetchAPI: true } }
+]);
 
 let mainWindow;
 let isScanning = false;
@@ -13,6 +18,12 @@ function createWindow() {
     height: 700,
     minWidth: 800,
     minHeight: 600,
+    titleBarStyle: 'hidden',
+    titleBarOverlay: {
+      color: '#090c15',
+      symbolColor: '#f3f4f6',
+      height: 35
+    },
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -21,11 +32,16 @@ function createWindow() {
   });
 
   mainWindow.loadFile('index.html');
-  // Remove default menu bar for a cleaner UI
   mainWindow.setMenuBarVisibility(false);
 }
 
 app.whenReady().then(async () => {
+  // Set up local media protocol handler to securely serve images to renderer
+  protocol.handle('media', (request) => {
+    const filePath = decodeURIComponent(request.url.replace('media://', ''));
+    return net.fetch('file:///' + filePath);
+  });
+
   createWindow();
 
   // Eagerly initialize Tesseract worker on startup for instant search response
@@ -166,3 +182,10 @@ ipcMain.on('start-scan', async (event, { folderPath, keywords }) => {
 ipcMain.on('stop-scan', () => {
   isScanning = false;
 });
+
+ipcMain.on('open-in-folder', (event, filePath) => {
+  if (fs.existsSync(filePath)) {
+    shell.showItemInFolder(filePath);
+  }
+});
+

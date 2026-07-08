@@ -7,6 +7,11 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <!-- Custom Windows-style draggable title bar -->
+  <div class="title-bar">
+    <span class="title-bar-text">SnapSeeker</span>
+  </div>
+
   <div class="app-container">
     
     <!-- Header -->
@@ -48,12 +53,12 @@
 
     <!-- Results Panel -->
     <section class="results-panel">
-      <!-- Left Column: Matches list -->
+      <!-- Left Column: Matches thumbnail grid -->
       <div class="results-list-container">
         <h3>Matches</h3>
-        <ul id="matches-list" class="matches-list">
-          <!-- Dynamically populated -->
-        </ul>
+        <div id="matches-grid" class="matches-grid">
+          <!-- Dynamically populated thumbnail cards -->
+        </div>
       </div>
 
       <!-- Right Column: Text content preview -->

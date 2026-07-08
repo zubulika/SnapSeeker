@@ -6,7 +6,7 @@ const startBtn = document.getElementById('start-btn');
 const stopBtn = document.getElementById('stop-btn');
 const progressBar = document.getElementById('progress-bar');
 const statusText = document.getElementById('status-text');
-const matchesList = document.getElementById('matches-list');
+const matchesGrid = document.getElementById('matches-grid');
 const previewMetadata = document.getElementById('preview-metadata');
 const previewText = document.getElementById('preview-text');
 
@@ -37,7 +37,7 @@ startBtn.addEventListener('click', () => {
   }
 
   // Reset UI State
-  matchesList.innerHTML = '';
+  matchesGrid.innerHTML = '';
   previewMetadata.innerHTML = '';
   previewText.innerText = 'Select an image to view text.';
   matchesDict = {};
@@ -75,40 +75,84 @@ window.api.onScanProgress(({ current, total, fileName }) => {
   statusText.innerText = `Searching [${current} / ${total}]: ${fileName}`;
 });
 
-// C. Found a matching image
+// C. Found a matching image (Draw square thumbnail block)
 window.api.onScanMatch((matchData) => {
   const { filePath, fileName, matchedKeywords, text } = matchData;
   matchesDict[filePath] = matchData;
 
-  // Create list item element
-  const li = document.createElement('li');
-  li.className = 'match-item';
-  li.dataset.path = filePath;
+  // Create thumbnail card
+  const card = document.createElement('div');
+  card.className = 'thumbnail-card';
+  card.dataset.path = filePath;
 
-  // Title
-  const title = document.createElement('span');
-  title.className = 'match-title';
-  title.innerText = fileName;
-  li.appendChild(title);
+  // Image element (securely loaded via custom media:// protocol)
+  const img = document.createElement('img');
+  img.className = 'thumbnail-img';
+  img.src = `media://${encodeURIComponent(filePath)}`;
+  img.alt = fileName;
+  card.appendChild(img);
 
-  // Tags container
-  const tagsContainer = document.createElement('div');
-  tagsContainer.className = 'match-tags';
-  matchedKeywords.forEach(keyword => {
-    const tag = document.createElement('span');
-    tag.className = 'keyword-tag';
-    tag.innerText = keyword;
-    tagsContainer.appendChild(tag);
+  // Hover overlay
+  const overlay = document.createElement('div');
+  overlay.className = 'card-overlay';
+
+  // Three dots options button
+  const optionsBtn = document.createElement('button');
+  optionsBtn.className = 'options-btn';
+  optionsBtn.innerText = '•••';
+  overlay.appendChild(optionsBtn);
+
+  // Dropdown menu
+  const menu = document.createElement('div');
+  menu.className = 'options-menu';
+
+  const openBtn = document.createElement('button');
+  openBtn.className = 'menu-item';
+  openBtn.innerText = 'Open image';
+  openBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    window.api.openImage(filePath);
+    menu.classList.remove('show');
+    card.classList.remove('menu-active');
   });
-  li.appendChild(tagsContainer);
+  menu.appendChild(openBtn);
 
-  // Event: Click to Preview
-  li.addEventListener('click', () => {
-    // Highlight selected item
-    document.querySelectorAll('.match-item').forEach(el => el.classList.remove('selected'));
-    li.classList.add('selected');
+  const folderBtn = document.createElement('button');
+  folderBtn.className = 'menu-item';
+  folderBtn.innerText = 'Show in folder';
+  folderBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    window.api.openInFolder(filePath);
+    menu.classList.remove('show');
+    card.classList.remove('menu-active');
+  });
+  menu.appendChild(folderBtn);
 
-    // Load Preview
+  overlay.appendChild(menu);
+  card.appendChild(overlay);
+
+  // Toggle options dropdown menu on click
+  optionsBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    
+    // Close other dropdowns first
+    document.querySelectorAll('.options-menu').forEach(el => {
+      if (el !== menu) el.classList.remove('show');
+    });
+    document.querySelectorAll('.thumbnail-card').forEach(el => {
+      if (el !== card) el.classList.remove('menu-active');
+    });
+
+    menu.classList.toggle('show');
+    card.classList.toggle('menu-active');
+  });
+
+  // Event: Click to preview text
+  card.addEventListener('click', () => {
+    document.querySelectorAll('.thumbnail-card').forEach(el => el.classList.remove('selected'));
+    card.classList.add('selected');
+
+    // Load Preview Panel Content
     previewMetadata.innerHTML = `
       <p><strong>Name:</strong> ${fileName}</p>
       <p><strong>Location:</strong> ${filePath}</p>
@@ -118,11 +162,11 @@ window.api.onScanMatch((matchData) => {
   });
 
   // Event: Double-Click to Open
-  li.addEventListener('dblclick', () => {
+  card.addEventListener('dblclick', () => {
     window.api.openImage(filePath);
   });
 
-  matchesList.appendChild(li);
+  matchesGrid.appendChild(card);
 });
 
 // D. Scan finished
@@ -146,3 +190,9 @@ function resetControlsState() {
   browseBtn.disabled = false;
   keywordsInput.disabled = false;
 }
+
+// Global click handler to close any active dropdown menus when clicking elsewhere
+document.addEventListener('click', () => {
+  document.querySelectorAll('.options-menu').forEach(el => el.classList.remove('show'));
+  document.querySelectorAll('.thumbnail-card').forEach(el => el.classList.remove('menu-active'));
+});

@@ -3,6 +3,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld('api', {
   selectFolder: () => ipcRenderer.invoke('select-folder'),
   openImage: (filePath) => ipcRenderer.send('open-image', filePath),
+  openInFolder: (filePath) => ipcRenderer.send('open-in-folder', filePath),
   startScan: (folderPath, keywords) => ipcRenderer.send('start-scan', { folderPath, keywords }),
   stopScan: () => ipcRenderer.send('stop-scan'),
   
