@@ -1,22 +1,22 @@
 /* ─── CSS Reset & Custom Properties ───────────────────────────────────────── */
 :root {
-  --bg-dark: #090c15;
-  --bg-card: #101524;
-  --bg-navbar: rgba(9, 12, 21, 0.85);
+  --bg-dark: #18181b;
+  --bg-card: #27272a;
+  --bg-navbar: rgba(24, 24, 27, 0.85);
   
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --text-dark: #64748b;
+  --text-main: #f4f4f5;
+  --text-muted: #a1a1aa;
+  --text-dark: #71717a;
   
-  --primary: #3b82f6;
-  --primary-hover: #1d4ed8;
-  --primary-glow: rgba(59, 130, 246, 0.35);
+  --primary: #0ea5e9;
+  --primary-hover: #0284c7;
+  --primary-glow: rgba(14, 165, 233, 0.35);
   
-  --secondary: #1e293b;
-  --secondary-hover: #334155;
+  --secondary: #3f3f46;
+  --secondary-hover: #52525b;
   
-  --border: rgba(255, 255, 255, 0.08);
-  --border-focus: rgba(59, 130, 246, 0.35);
+  --border: #3f3f46;
+  --border-focus: rgba(14, 165, 233, 0.35);
   
   --max-width: 1200px;
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);

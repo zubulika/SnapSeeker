@@ -1,22 +1,22 @@
 /* ─── Design System & Variable Tokens ───────────────────────────────────────── */
 :root {
-  --bg-dark: #090c15;
-  --bg-secondary: #101524;
-  --bg-tertiary: #192035;
+  --bg-dark: #18181b;
+  --bg-secondary: #27272a;
+  --bg-tertiary: #3f3f46;
   
-  --text-primary: #f3f4f6;
-  --text-secondary: #9ca3af;
-  --text-muted: #6b7280;
+  --text-primary: #f4f4f5;
+  --text-secondary: #a1a1aa;
+  --text-muted: #71717a;
   
-  --accent-primary: #3b82f6; /* Modern Blue */
-  --accent-hover: #2563eb;
-  --accent-light: rgba(59, 130, 246, 0.15);
+  --accent-primary: #0ea5e9;
+  --accent-hover: #0284c7;
+  --accent-light: rgba(14, 165, 233, 0.15);
   
   --danger-primary: #ef4444;
   --danger-hover: #dc2626;
   
-  --border-color: #232d42;
-  --border-focus: rgba(59, 130, 246, 0.45);
+  --border-color: #3f3f46;
+  --border-focus: rgba(14, 165, 233, 0.45);
   --border-radius-sm: 6px;
   --border-radius-md: 10px;
   --border-radius-lg: 14px;

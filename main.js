@@ -20,9 +20,9 @@ function createWindow() {
     minHeight: 600,
     titleBarStyle: 'hidden',
     titleBarOverlay: {
-      color: '#090c15',
-      symbolColor: '#f3f4f6',
-      height: 35
+      color: '#18181b',
+      symbolColor: '#f4f4f5',
+      height: 32
     },
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
