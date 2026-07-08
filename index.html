@@ -31,8 +31,20 @@
       </div>
 
       <div class="form-group">
-        <label for="keywords">Keywords</label>
-        <input type="text" id="keywords" value="oracle, bypass, backup, recovery">
+        <div class="label-row">
+          <label for="keyword-input">Keywords</label>
+          <div class="tooltip-container">
+            <svg class="eye-icon" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <span class="tooltip-text">Type a comma to separate keywords</span>
+          </div>
+        </div>
+        <div class="tags-input-container" id="tags-container">
+          <div class="tags-list" id="tags-list"></div>
+          <input type="text" id="keyword-input" placeholder="Type to add...">
+        </div>
       </div>
     </section>
 

@@ -1,7 +1,6 @@
 // DOM Elements
 const browseBtn = document.getElementById('browse-btn');
 const folderPathInput = document.getElementById('folder-path');
-const keywordsInput = document.getElementById('keywords');
 const startBtn = document.getElementById('start-btn');
 const stopBtn = document.getElementById('stop-btn');
 const progressBar = document.getElementById('progress-bar');
@@ -10,7 +9,60 @@ const matchesGrid = document.getElementById('matches-grid');
 const previewMetadata = document.getElementById('preview-metadata');
 const previewText = document.getElementById('preview-text');
 
+// Keywords Tag Input Elements
+const tagsContainer = document.getElementById('tags-container');
+const tagsList = document.getElementById('tags-list');
+const keywordInput = document.getElementById('keyword-input');
+
 let matchesDict = {}; // Map of filePath -> match details
+let activeKeywords = ['oracle', 'bypass', 'backup', 'recovery']; // Default tags
+
+// ─── Keywords Tag Input Logic ────────────────────────────────────────────────
+
+function renderTags() {
+  tagsList.innerHTML = '';
+  activeKeywords.forEach(tag => {
+    const badge = document.createElement('span');
+    badge.className = 'keyword-tag-badge';
+    badge.innerText = tag;
+
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'tag-remove-btn';
+    removeBtn.innerText = '×';
+    removeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      activeKeywords = activeKeywords.filter(k => k !== tag);
+      renderTags();
+    });
+
+    badge.appendChild(removeBtn);
+    tagsList.appendChild(badge);
+  });
+}
+
+// Focus input on container click
+tagsContainer.addEventListener('click', () => {
+  keywordInput.focus();
+});
+
+// Watch input keys to separate tags
+keywordInput.addEventListener('keydown', (e) => {
+  if (e.key === ',' || e.key === 'Enter') {
+    e.preventDefault();
+    const val = keywordInput.value.replace(/,/g, '').trim().toLowerCase();
+    if (val && !activeKeywords.includes(val)) {
+      activeKeywords.push(val);
+      renderTags();
+    }
+    keywordInput.value = '';
+  } else if (e.key === 'Backspace' && keywordInput.value === '') {
+    activeKeywords.pop();
+    renderTags();
+  }
+});
+
+// Initialize tags on load
+renderTags();
 
 // ─── Button Events ───────────────────────────────────────────────────────────
 
@@ -25,13 +77,12 @@ browseBtn.addEventListener('click', async () => {
 // 2. Start OCR Scan
 startBtn.addEventListener('click', () => {
   const folderPath = folderPathInput.value;
-  const keywords = keywordsInput.value;
 
   if (!folderPath) {
     alert('Please select a target folder first.');
     return;
   }
-  if (!keywords.trim()) {
+  if (activeKeywords.length === 0) {
     alert('Please enter at least one keyword.');
     return;
   }
@@ -47,12 +98,13 @@ startBtn.addEventListener('click', () => {
   startBtn.disabled = true;
   stopBtn.disabled = false;
   browseBtn.disabled = true;
-  keywordsInput.disabled = true;
+  keywordInput.disabled = true;
 
   statusText.innerText = 'Searching...';
 
-  // Start the scan via main process
-  window.api.startScan(folderPath, keywords);
+  // Join active keywords array with commas to send to Main process
+  const keywordsString = activeKeywords.join(',');
+  window.api.startScan(folderPath, keywordsString);
 });
 
 // 3. Stop OCR Scan
@@ -188,7 +240,7 @@ function resetControlsState() {
   startBtn.disabled = false;
   stopBtn.disabled = true;
   browseBtn.disabled = false;
-  keywordsInput.disabled = false;
+  keywordInput.disabled = false;
 }
 
 // Global click handler to close any active dropdown menus when clicking elsewhere
