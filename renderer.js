@@ -15,7 +15,7 @@ const tagsList = document.getElementById('tags-list');
 const keywordInput = document.getElementById('keyword-input');
 
 let matchesDict = {}; // Map of filePath -> match details
-let activeKeywords = ['oracle', 'bypass', 'backup', 'recovery']; // Default tags
+let activeKeywords = []; // Start empty
 
 // ─── Keywords Tag Input Logic ────────────────────────────────────────────────
 
