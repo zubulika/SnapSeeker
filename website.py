@@ -1,10 +1,9 @@
-import http.server
-import socketserver
+import subprocess
 import socket
 import webbrowser
-import threading
-import os
 import time
+import os
+import sys
 
 def find_free_port():
     """Finds a random free port on localhost."""
@@ -13,39 +12,36 @@ def find_free_port():
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         return s.getsockname()[1]
 
-class Handler(http.server.SimpleHTTPRequestHandler):
-    def __init__(self, *args, **kwargs):
-        # Serve files from the 'website' subdirectory
-        project_dir = os.path.dirname(os.path.abspath(__file__))
-        website_dir = os.path.join(project_dir, 'website')
-        super().__init__(*args, directory=website_dir, **kwargs)
-
-def start_server(port):
-    """Starts the HTTP server in a blocking loop."""
-    # Serve only on localhost for security
-    with socketserver.TCPServer(('localhost', port), Handler) as httpd:
-        print(f"Serving website at: http://localhost:{port}")
-        httpd.serve_forever()
-
 def main():
+    project_dir = os.path.dirname(os.path.abspath(__file__))
+    website_dir = os.path.join(project_dir, 'website')
+    
     port = find_free_port()
+    print(f"Starting Next.js dev server on port {port}...")
     
-    # Start the HTTP server in a background daemon thread
-    server_thread = threading.Thread(target=start_server, args=(port,), daemon=True)
-    server_thread.start()
-    
-    # Wait briefly for the server to spin up, then open the browser
-    time.sleep(0.5)
-    url = f"http://localhost:{port}/index.html"
+    # Run the Next.js dev server on the selected port
+    try:
+        # Use shell=True for Windows command resolution
+        process = subprocess.Popen(
+            ["npx", "next", "dev", "-p", str(port)],
+            cwd=website_dir,
+            shell=True
+        )
+    except Exception as e:
+        print(f"Error starting dev server: {e}", file=sys.stderr)
+        sys.exit(1)
+        
+    # Wait a few seconds for Next.js compilation to start, then open the browser
+    time.sleep(2.5)
+    url = f"http://localhost:{port}"
     print(f"Opening browser to {url}...")
     webbrowser.open(url)
     
-    # Keep the main thread alive so the daemon server keeps running
     try:
-        while True:
-            time.sleep(1)
+        process.wait()
     except KeyboardInterrupt:
-        print("\nStopping website server.")
+        print("\nStopping website dev server.")
+        process.terminate()
 
 if __name__ == "__main__":
     main()
