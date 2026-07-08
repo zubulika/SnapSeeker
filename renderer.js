@@ -39,7 +39,7 @@ startBtn.addEventListener('click', () => {
   // Reset UI State
   matchesList.innerHTML = '';
   previewMetadata.innerHTML = '';
-  previewText.innerText = 'No image selected. Click a match to view extracted text.';
+  previewText.innerText = 'Select an image to view text.';
   matchesDict = {};
   progressBar.style.width = '0%';
 
@@ -49,7 +49,7 @@ startBtn.addEventListener('click', () => {
   browseBtn.disabled = true;
   keywordsInput.disabled = true;
 
-  statusText.innerText = 'Starting scan engine...';
+  statusText.innerText = 'Searching...';
 
   // Start the scan via main process
   window.api.startScan(folderPath, keywords);
@@ -58,21 +58,21 @@ startBtn.addEventListener('click', () => {
 // 3. Stop OCR Scan
 stopBtn.addEventListener('click', () => {
   window.api.stopScan();
-  statusText.innerText = 'Stopping scan...';
+  statusText.innerText = 'Stopping...';
 });
 
 // ─── OCR Scan Listeners ──────────────────────────────────────────────────────
 
 // A. Scan initialization info
 window.api.onScanInfo(({ total }) => {
-  statusText.innerText = `Found ${total} images to scan. Starting...`;
+  statusText.innerText = `Found ${total} images to search.`;
 });
 
 // B. Scan progress updates
 window.api.onScanProgress(({ current, total, fileName }) => {
   const percentage = ((current / total) * 100).toFixed(1);
   progressBar.style.width = `${percentage}%`;
-  statusText.innerText = `Scanning [${current} / ${total}] (${percentage}%): ${fileName}`;
+  statusText.innerText = `Searching [${current} / ${total}]: ${fileName}`;
 });
 
 // C. Found a matching image
@@ -110,9 +110,9 @@ window.api.onScanMatch((matchData) => {
 
     // Load Preview
     previewMetadata.innerHTML = `
-      <p><strong>Filename:</strong> ${fileName}</p>
-      <p><strong>Path:</strong> ${filePath}</p>
-      <p><strong>Keywords Matched:</strong> ${matchedKeywords.join(', ')}</p>
+      <p><strong>Name:</strong> ${fileName}</p>
+      <p><strong>Location:</strong> ${filePath}</p>
+      <p><strong>Matched:</strong> ${matchedKeywords.join(', ')}</p>
     `;
     previewText.innerText = text;
   });
@@ -128,15 +128,15 @@ window.api.onScanMatch((matchData) => {
 // D. Scan finished
 window.api.onScanDone(({ count }) => {
   resetControlsState();
-  statusText.innerText = `Scan completed. Found ${count} matches.`;
-  alert(`Scan completed! Found ${count} matching images.`);
+  statusText.innerText = `Search finished. Found ${count} matches.`;
+  alert(`Search finished. Found ${count} matches.`);
 });
 
 // E. Scan encountered error
 window.api.onScanError((errMessage) => {
   resetControlsState();
-  statusText.innerText = 'Scan failed.';
-  alert(`Error: ${errMessage}`);
+  statusText.innerText = 'Search failed.';
+  alert(`An error occurred: ${errMessage}`);
 });
 
 // Helper: Restore original button states

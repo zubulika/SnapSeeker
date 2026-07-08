@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SnapSeeker — Desktop OCR Search</title>
+  <title>SnapSeeker</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -11,38 +11,38 @@
     
     <!-- Header -->
     <header class="app-header">
-      <h1>SnapSeeker 🔍</h1>
-      <p class="subtitle">Search for text inside local screenshots & images using OCR</p>
+      <h1>SnapSeeker</h1>
+      <p class="subtitle">Search for text inside local screenshots and images</p>
     </header>
 
     <!-- Configuration Panel -->
     <section class="config-panel">
       <div class="form-group">
-        <label for="folder-path">Target Folder</label>
+        <label for="folder-path">Folder location</label>
         <div class="input-with-button">
-          <input type="text" id="folder-path" readonly placeholder="No folder selected...">
-          <button id="browse-btn" class="btn secondary-btn">Browse...</button>
+          <input type="text" id="folder-path" readonly placeholder="Select folder...">
+          <button id="browse-btn" class="btn secondary-btn">Choose</button>
         </div>
       </div>
 
       <div class="form-group">
-        <label for="keywords">Keywords (comma-separated)</label>
-        <input type="text" id="keywords" value="oracle, bypass, backup, recovery, credentials">
+        <label for="keywords">Keywords</label>
+        <input type="text" id="keywords" value="oracle, bypass, backup, recovery">
       </div>
     </section>
 
     <!-- Controls & Progress -->
     <section class="control-panel">
       <div class="button-group">
-        <button id="start-btn" class="btn primary-btn">Start Search</button>
-        <button id="stop-btn" class="btn danger-btn" disabled>Cancel</button>
+        <button id="start-btn" class="btn primary-btn">Search</button>
+        <button id="stop-btn" class="btn danger-btn" disabled>Stop</button>
       </div>
 
       <div class="progress-container">
         <div class="progress-bar-wrapper">
           <div id="progress-bar" class="progress-bar-fill" style="width: 0%;"></div>
         </div>
-        <span id="status-text">Ready to scan</span>
+        <span id="status-text">Ready</span>
       </div>
     </section>
 
@@ -50,7 +50,7 @@
     <section class="results-panel">
       <!-- Left Column: Matches list -->
       <div class="results-list-container">
-        <h3>Matches Found</h3>
+        <h3>Matches</h3>
         <ul id="matches-list" class="matches-list">
           <!-- Dynamically populated -->
         </ul>
@@ -58,20 +58,20 @@
 
       <!-- Right Column: Text content preview -->
       <div class="preview-container">
-        <h3>OCR Text Content Preview</h3>
+        <h3>Preview text</h3>
         <div class="preview-box">
           <div id="preview-metadata" class="preview-metadata">
             <!-- Metadata here -->
           </div>
           <hr class="preview-divider">
-          <pre id="preview-text" class="preview-text">No image selected. Click a match to view extracted text.</pre>
+          <pre id="preview-text" class="preview-text">Select an image to view text.</pre>
         </div>
       </div>
     </section>
 
     <!-- Footer -->
     <footer class="app-footer">
-      <p>💡 Tip: Double-click a file in the list to open it directly in your default photo viewer.</p>
+      <p>Double-click an item in the list to open it.</p>
     </footer>
 
   </div>

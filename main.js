@@ -25,8 +25,15 @@ function createWindow() {
   mainWindow.setMenuBarVisibility(false);
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   createWindow();
+
+  // Eagerly initialize Tesseract worker on startup for instant search response
+  try {
+    tesseractWorker = await createWorker('eng');
+  } catch (err) {
+    console.error('Failed to pre-load OCR worker:', err);
+  }
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
@@ -104,7 +111,7 @@ ipcMain.on('start-scan', async (event, { folderPath, keywords }) => {
       return;
     }
 
-    // B. Initialize Tesseract Worker (if not already done)
+    // B. Ensure Tesseract Worker is ready
     if (!tesseractWorker) {
       tesseractWorker = await createWorker('eng');
     }
