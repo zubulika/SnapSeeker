@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain, dialog, shell, protocol, net } = require('e
 const path = require('path');
 const fs = require('fs');
 const { createWorker } = require('tesseract.js');
+const { autoUpdater } = require('electron-updater');
 
 // Register media protocol scheme as privileged before app is ready
 protocol.registerSchemesAsPrivileged([
@@ -50,6 +51,9 @@ app.whenReady().then(async () => {
   } catch (err) {
     console.error('Failed to pre-load OCR worker:', err);
   }
+
+  // Silently check for and download background updates from GitHub
+  autoUpdater.checkForUpdatesAndNotify();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
