@@ -1,4 +1,5 @@
 import React from "react";
+import DownloadButton from "./DownloadButton";
 
 export default function Home() {
   return (
@@ -12,7 +13,7 @@ export default function Home() {
             <a href="#how-it-works">How it Works</a>
             <a href="https://github.com/zubulika/SnapSeeker" target="_blank" rel="noopener noreferrer" className="github-link">GitHub</a>
           </div>
-          <a href="#" className="btn nav-btn btn-primary">Download</a>
+          <DownloadButton className="btn nav-btn btn-primary" text="Download" />
         </div>
       </nav>
 
@@ -26,7 +27,7 @@ export default function Home() {
               A fast, private, and 100% offline OCR search engine for your desktop. Stop wasting hours digging through folders for backup codes, API credentials, or receipts.
             </p>
             <div className="hero-actions">
-              <a href="#" className="btn btn-primary">Download for Windows</a>
+              <DownloadButton className="btn btn-primary" text="Download for Windows" />
               <a href="https://github.com/zubulika/SnapSeeker" target="_blank" rel="noopener noreferrer" className="btn btn-secondary">Source code</a>
             </div>
           </div>
@@ -117,7 +118,7 @@ export default function Home() {
         <div className="banner-container">
           <h2>Get started with SnapSeeker today.</h2>
           <p>Clean, minimal, and open-source search utility for Windows 10 and 11.</p>
-          <a href="#" className="btn btn-primary btn-large">Download Installer</a>
+          <DownloadButton className="btn btn-primary btn-large" text="Download Installer" />
         </div>
       </section>
 
